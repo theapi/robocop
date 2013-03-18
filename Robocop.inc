@@ -85,12 +85,11 @@ class Robocop
     return trim($output);
   }
   
-  protected function prepareEmail() {
+  public function prepareEmail() {
     $mail = $this->getMailer();
     
     $mail->SetFrom($this->conf['email']['from']);
-    $mail->AddReplyTo($this->conf['email']['to']);
-    
+    $mail->AddAddress($this->conf['email']['to']);
     $this->prepareGmail();
     
     return $mail;
@@ -99,7 +98,7 @@ class Robocop
   /**
    * Get all the variable set for sending via Gmail
    */
-  protected function prepareGmail() {
+  public function prepareGmail() {
     $mail = $this->getMailer();
     
     $mail->IsSMTP(); // telling the class to use SMTP
@@ -109,7 +108,7 @@ class Robocop
     $mail->Port       = 587;                   // set the SMTP port for the GMAIL server
     $mail->Username   = $this->conf['smtp']['username']; // GMAIL username
     $mail->Password   = $this->conf['smtp']['password']; // GMAIL password
-    
+ 
   }
   
   /**
@@ -118,7 +117,7 @@ class Robocop
   protected function passOnMessage() {
     $mail = $this->prepareEmail();
     $mail->Subject = $this->parser->getHeader('subject');
-    $mail->AltBody = $this->parser->getMessageBody('text');
+    $mail->Body = $this->parser->getMessageBody('text');
     
     $html = $this->parser->getMessageBody('html');
     if (!empty($html)) {
