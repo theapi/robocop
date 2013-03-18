@@ -5,6 +5,7 @@ require_once 'php-mime-mail-parser/MimeMailParser.class.php';
 class Robocop 
 {
   
+  protected $conf;
   protected $from;
   protected $to;
   protected $gmail_username;
@@ -29,12 +30,16 @@ class Robocop
    * Constructor
    * 
    */
-  public function __construct($from, $to, $gmail_username, $gmail_password) {
-    
+  public function __construct($conf) {
+    $this->conf = $conf;
+    $this->save_dir = $this->conf['save_dir'];
+
+    /*
     $this->from = $from;
     $this->to = $to;
     $this->gmail_username = $gmail_username;
     $this->gmail_password = $gmail_password;
+    */
     
     $this->parser = new MimeMailParser();
   }
@@ -83,8 +88,8 @@ class Robocop
   protected function prepareEmail() {
     $mail = $this->getMailer();
     
-    $mail->SetFrom($this->from);
-    $mail->AddReplyTo($this->to);
+    $mail->SetFrom($this->conf['email']['from']);
+    $mail->AddReplyTo($this->conf['email']['to']);
     
     $this->prepareGmail();
     
@@ -102,8 +107,8 @@ class Robocop
     $mail->SMTPSecure = "tls";                 // sets the prefix to the servier
     $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
     $mail->Port       = 587;                   // set the SMTP port for the GMAIL server
-    $mail->Username   = $this->gmail_username; // GMAIL username
-    $mail->Password   = $this->gmail_password; // GMAIL password
+    $mail->Username   = $this->conf['smtp']['username']; // GMAIL username
+    $mail->Password   = $this->conf['smtp']['password']; // GMAIL password
     
   }
   
@@ -113,14 +118,14 @@ class Robocop
   protected function passOnMessage() {
     $mail = $this->prepareEmail();
     $mail->Subject = $this->parser->getHeader('subject');
-    $mail->AltBody = $Parser->getMessageBody('text');
+    $mail->AltBody = $this->parser->getMessageBody('text');
     
-   $html = $Parser->getMessageBody('html');
-   if (!empty($html)) {
-     $mail->MsgHTML($html);
-   }
+    $html = $this->parser->getMessageBody('html');
+    if (!empty($html)) {
+      $mail->MsgHTML($html);
+    }
    
-   $mail->Send();
+    $mail->Send();
     
   }
   

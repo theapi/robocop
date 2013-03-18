@@ -1,10 +1,9 @@
 <?php
 
-
+require_once 'config.php';
 require_once 'Robocop.inc';
 
-
-$robocop = new Robocop($from, $to, $gmail_username, $gmail_password);
+$robocop = new Robocop($conf);
 $robocop->processIncomingMail();
 
 
