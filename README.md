@@ -6,5 +6,9 @@ Handle emails from the Swann CCTV system
 Requirements:
 
 http://pecl.php.net/package/mailparse
-https://code.google.com/p/php-mime-mail-parser/
-http://phpmailer.worxware.com/
+
+https://code.google.com/p/php-mime-mail-parser
+
+http://phpmailer.worxware.com
+
+http://www.imagemagick.org/script/index.php
