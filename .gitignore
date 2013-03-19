@@ -2,4 +2,9 @@ GifCreator
 PHPMailer
 php-mime-mail-parser
 config.php
-
+vendor
+composer.lock
+composer.phar
+.buildpath
+.project
+.settings
