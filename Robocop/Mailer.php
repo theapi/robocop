@@ -8,8 +8,6 @@
 
 namespace Robocop;
 
-require_once 'vendor/PHPMailer/class.phpmailer.php';
-
 /**
  * Send email
  */
@@ -26,7 +24,7 @@ class Mailer
    *
    */
   public function __construct() {
-    $this->mailer = new PHPMailer();
+    $this->mailer = new \PHPMailer();
   }
 
   /**

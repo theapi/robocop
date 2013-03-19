@@ -8,8 +8,6 @@
 
 namespace Robocop;
 
-require_once 'vendor/php-mime-mail-parser/MimeMailParser.class.php';
-
 /**
  * Parse email
  */
@@ -36,7 +34,7 @@ class MailParser
     //$this->conf = $conf;
     //$this->save_dir = $this->conf['save_dir'];
 
-    $this->parser = new MimeMailParser();
+    $this->parser = new \MimeMailParser();
   }
 
   public function processIncomingMail() {

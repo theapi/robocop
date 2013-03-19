@@ -12,7 +12,7 @@
                     "reference": "trunk/"
                 },
                 "autoload": {
-                    "classmap": ["/", "MimeMailParser.class.php"]
+                    "classmap": ["MimeMailParser.class.php"]
                 }
             }
         }
@@ -20,5 +20,8 @@
     "require": {
         "phpmailer/phpmailer": "dev-master",
         "php-mime-mail-parser/php-mime-mail-parser": "dev-master"
+    },
+    "autoload": {
+        "classmap": ["Robocop"]
     }
 }
