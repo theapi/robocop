@@ -1,0 +1,24 @@
+{
+    "name": "theapi/robocop",
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "php-mime-mail-parser/php-mime-mail-parser",
+                "version": "dev-master",
+                "source": {
+                    "url": "http://php-mime-mail-parser.googlecode.com/svn/",
+                    "type": "svn",
+                    "reference": "trunk/"
+                },
+                "autoload": {
+                    "classmap": ["libs/"]
+                }
+            }
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "dev-master",
+        "php-mime-mail-parser/php-mime-mail-parser": "dev-master"
+    }
+}
