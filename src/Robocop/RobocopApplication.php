@@ -52,10 +52,13 @@ class RobocopApplication
         $mailer = new Mailer($config);
         $mailer->sendQueue();
         break;
+      case 'sendTestMail':
+        $mailer = new Mailer($config);
+        $mailer->sendTestMail();
+        break;
       default:
         $mail_parser = new MailParser($config);
-        //$mail_parser->processIncomingMail();
-        var_dump($mail_parser);
+        $mail_parser->processIncomingMail();
         break;
     }
 

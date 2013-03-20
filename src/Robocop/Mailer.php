@@ -66,4 +66,18 @@ class Mailer
     $this->mailer->Password   = $smtp['password']; // GMAIL password
   }
 
+  public function sendTestMail() {
+    $this->prepareEmail();
+    $this->mailer->Subject = 'Test from PHP';
+    $this->mailer->Body = 'Sending from PHP Mailer';
+    $this->mailer->SMTPDebug = 1;
+
+    if(!$this->Send()) {
+      echo "Mailer Error: " . $this->mailer->ErrorInfo;
+    } else {
+      echo "Message has been sent";
+    }
+
+  }
+
 }
