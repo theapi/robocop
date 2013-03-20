@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration 
+ * Configuration
  */
 
 $conf = array(
@@ -15,6 +15,5 @@ $conf = array(
     'username' => 'my.email.@gmail.com',
     'password' => 'secret',
   ),
-  
-)
 
+);

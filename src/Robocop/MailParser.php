@@ -1,12 +1,12 @@
 <?php
+namespace Robocop;
+
 /**
  *
  * @see http://pecl.php.net/package/mailparse
  * @author theapi
  *
  */
-
-namespace Robocop;
 
 /**
  * Parse email
@@ -22,18 +22,14 @@ class MailParser
   /**
    * The configuration object
    */
-  protected $conf;
+  protected $config;
 
   /**
    * Constructor
    *
    */
-  public function __construct() {
-
-    //TODO: load config
-    //$this->conf = $conf;
-    //$this->save_dir = $this->conf['save_dir'];
-
+  public function __construct($config) {
+    $this->config = $config;
     $this->parser = new \MimeMailParser();
   }
 
@@ -65,7 +61,7 @@ class MailParser
   protected function saveAttachments() {
     $attachments = $this->parser->getAttachments();
     if (is_array($attachments) && count($attachments) > 0 ) {
-      $dir = $this->save_dir . '/' . date('Y-m-d');
+      $dir = $this->config->getSaveDir() . '/' . date('Y-m-d');
       foreach($attachments as $attachment) {
         // get the attachment name
         $filename = $attachment->filename;

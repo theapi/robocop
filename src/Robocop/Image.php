@@ -1,4 +1,6 @@
 <?php
+namespace Robocop;
+
 /**
  *
  * @see http://www.imagemagick.org/script/index.php
@@ -6,10 +8,8 @@
  *
  */
 
-namespace Robocop;
-
 /**
- * Send email
+ * Do stuff with images
  */
 class Image
 {

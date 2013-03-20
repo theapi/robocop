@@ -1,4 +1,6 @@
 <?php
+namespace Robocop;
+
 /**
  *
  * @see http://phpmailer.worxware.com
@@ -6,7 +8,6 @@
  *
  */
 
-namespace Robocop;
 
 /**
  * Send email
@@ -20,10 +21,16 @@ class Mailer
   protected $mailer;
 
   /**
+   * The configuration object
+   */
+  protected $config;
+
+  /**
    * Constructor
    *
    */
-  public function __construct() {
+  public function __construct($config) {
+    $this->config = $config;
     $this->mailer = new \PHPMailer();
   }
 
@@ -39,8 +46,9 @@ class Mailer
   }
 
   public function prepareEmail() {
-    $this->mailer->SetFrom($this->conf['email']['from']);
-    $this->mailer->AddAddress($this->conf['email']['to']);
+    $email = $this->config->getEmail();
+    $this->mailer->SetFrom($email['from']);
+    $this->mailer->AddAddress($email['to']);
     $this->prepareGmail();
   }
 
@@ -48,13 +56,14 @@ class Mailer
    * Get all the variable set for sending via Gmail
    */
   public function prepareGmail() {
+    $smtp = $this->config->getSmtp();
     $this->mailer->IsSMTP(); // telling the class to use SMTP
     $this->mailer->SMTPAuth   = true;                  // enable SMTP authentication
     $this->mailer->SMTPSecure = "tls";                 // sets the prefix to the servier
     $this->mailer->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
     $this->mailer->Port       = 587;                   // set the SMTP port for the GMAIL server
-    $this->mailer->Username   = $this->conf['smtp']['username']; // GMAIL username
-    $this->mailer->Password   = $this->conf['smtp']['password']; // GMAIL password
+    $this->mailer->Username   = $smtp['username']; // GMAIL username
+    $this->mailer->Password   = $smtp['password']; // GMAIL password
   }
 
 }
