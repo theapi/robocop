@@ -2,7 +2,7 @@
 namespace Robocop;
 
 use Robocop\Config,
-    Robocop\Image,
+    Robocop\Images,
     Robocop\Mailer,
     Robocop\MailParser;
 
@@ -55,6 +55,12 @@ class RobocopApplication
       case 'sendTestMail':
         $mailer = new Mailer($config);
         $mailer->sendTestMail();
+        break;
+      case 'compareDir':
+        if (isset($_SERVER['argv'][1])) {
+          $images = new Images($config);
+          $images->compareDir($_SERVER['argv'][1]);
+        }
         break;
       default:
         $mail_parser = new MailParser($config);

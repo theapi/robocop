@@ -1,5 +1,17 @@
 <?php
+use Robocop\RobocopApplication;
 
+require 'vendor/autoload.php';
+
+$app = new RobocopApplication();
+
+try {
+  $app->run('compareDir');
+} catch (Exception $e) {
+  echo $e->getMessage() . "\n";
+}
+
+/*
 require 'vendor/autoload.php';
 
 $dir = '/home/peter/cctv';
@@ -23,3 +35,4 @@ foreach ($images as $key => $image) {
 }
 
 // 5000 seems to be a good value to be a real change
+*/
