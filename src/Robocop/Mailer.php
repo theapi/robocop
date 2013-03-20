@@ -42,7 +42,7 @@ class Mailer
   }
 
   public function send() {
-    $this->mailer->Send();
+    return $this->mailer->Send();
   }
 
   public function prepareEmail() {

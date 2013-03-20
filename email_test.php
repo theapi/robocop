@@ -1,20 +1,12 @@
 <?php
+use Robocop\RobocopApplication;
 
-require_once 'config.php';
-require_once 'Robocop.inc';
+require 'vendor/autoload.php';
 
-$robocop = new Robocop($conf);
-$mail = $robocop->prepareEmail();
+$app = new RobocopApplication();
 
-
-$mail->Subject = 'Test from PHP';
-$mail->Body = 'Sending from PHP Mailer';
-
-$mail->SMTPDebug = 1;
-
-if(!$mail->Send()) {
-  echo "Mailer Error: " . $mail->ErrorInfo;
-} else {
-  echo "Message has been sent";
+try {
+  $app->run('sendTestMail');
+} catch (Exception $e) {
+  echo $e->getMessage() . "\n";
 }
-    

@@ -32,21 +32,21 @@ class Config
 
   public function getSaveDir() {
     if (!isset($this->conf['save_dir'])) {
-      $this->conf['save_dir'] = '/tmp';
+      return $this->conf['save_dir'] = '/tmp';
     }
     return $this->conf['save_dir'];
   }
 
   public function getEmail() {
     if (isset($this->conf['email'])) {
-      $this->conf['email'];
+      return $this->conf['email'];
     }
     return NULL;
   }
 
   public function getSmtp() {
     if (isset($this->conf['smtp'])) {
-      $this->conf['smtp'];
+      return $this->conf['smtp'];
     }
     return NULL;
   }
