@@ -2,6 +2,12 @@
 
 namespace Theapi\Robocop\Console;
 
+use Theapi\Robocop\Console\Command\InboxCommand;
+
+use Theapi\Robocop\MailParser;
+
+use Symfony\Component\DependencyInjection\Definition;
+
 use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Application,
     Symfony\Component\Console\Command\Command,
@@ -21,6 +27,7 @@ use Symfony\Component\Config\FileLocator,
 class RobocopApplication extends Application
 {
     private $basePath;
+    private $container;
 
     /**
      * {@inheritdoc}
@@ -28,8 +35,15 @@ class RobocopApplication extends Application
     public function __construct($version)
     {
         parent::__construct('Robocop', $version);
+
+        $this->container = new ContainerBuilder();
+        $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
+        $loader->load('robocop.yml');
     }
 
+    public function getContainer() {
+      return $this->container;
+    }
 
     /**
      * Runs the current application.
@@ -41,7 +55,7 @@ class RobocopApplication extends Application
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $this->add($this->createCommand($input));
+       // $this->add($this->createCommand($input));
 
         return parent::doRun($input, $output);
     }
@@ -68,7 +82,13 @@ class RobocopApplication extends Application
     protected function createContainer(InputInterface $input)
     {
         $container = new ContainerBuilder();
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+
+        //TODO: this should be in yml/xml somewhere
+        //$command = new InboxCommand($container);
+        //$definition = new Definition($command);
+        //$container->setDefinition('robocop.console.command', $definition);
+
+        $loader = new YamlFileLoader($container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
         $loader->load('robocop.yml');
         $container->compile();
 

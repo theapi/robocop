@@ -1,0 +1,4 @@
+parameters:
+  robocop:
+    save_dir:
+      /home/peter/cctv
