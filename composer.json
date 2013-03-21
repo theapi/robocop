@@ -1,5 +1,13 @@
 {
     "name": "theapi/robocop",
+    "keywords":     ["CCTV", "Symfony2"],
+    "homepage":     "https://github.com/theapi/robocop",
+    "authors":      [
+        {
+            "name": "Peter Clarke"
+        }
+    ],
+
     "repositories": [
         {
             "type": "package",
@@ -17,10 +25,16 @@
             }
         }
     ],
+
     "require": {
-        "phpmailer/phpmailer": "dev-master",
+        "php":                           ">=5.3.1",
+        "symfony/console":               ">=2.0,<2.3-dev",
+        "symfony/config":                ">=2.0,<2.3-dev",
+        "symfony/dependency-injection":  ">=2.0,<2.3-dev",
+        "symfony/yaml":                  ">=2.0,<2.3-dev",
         "php-mime-mail-parser/php-mime-mail-parser": "dev-master"
     },
+    
     "autoload": {
         "psr-0": {"Robocop": "src/"}
     }
