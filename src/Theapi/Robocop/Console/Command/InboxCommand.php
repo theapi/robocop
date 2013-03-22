@@ -20,6 +20,11 @@ class InboxCommand extends Command
         $this
             ->setName('inbox')
             ->setDescription('Mail inbox for handling incoming mail')
+            ->setHelp('
+The <info>%command.name%</info> command process incoming mail from an MTA (Postfix).
+In ~/.redirect for the mail box to be processed, put:
+  <info>"| php ' . ROBOCOP_BIN_PATH . '"</info>
+            ')
         ;
     }
 
