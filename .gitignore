@@ -2,6 +2,7 @@ GifCreator
 PHPMailer
 php-mime-mail-parser
 config.php
+app/config/config.yml
 vendor
 composer.lock
 composer.phar

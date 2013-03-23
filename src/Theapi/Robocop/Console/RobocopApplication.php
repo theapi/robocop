@@ -2,6 +2,8 @@
 
 namespace Theapi\Robocop\Console;
 
+use Theapi\Robocop\Console\Command\EmailTestCommand;
+
 use Symfony\Component\Console\Input\InputArgument;
 
 use Theapi\Robocop\Console\Command\GreetCommand,
@@ -38,7 +40,7 @@ class RobocopApplication extends Application
 
         $this->container = new ContainerBuilder();
         $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
-        $loader->load('robocop.yml');
+        $loader->load('config.yml');
     }
 
     public function getContainer() {
@@ -71,6 +73,7 @@ class RobocopApplication extends Application
         // which is used when using the --help option
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new ImagesCommand();
+        $defaultCommands[] = new EmailTestCommand();
         $defaultCommands[] = new GreetCommand();
 
         return $defaultCommands;

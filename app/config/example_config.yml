@@ -1,0 +1,12 @@
+parameters:
+  robocop:
+    save_dir: /home/cctv
+    email:
+      from: from@example.com
+      to: to@example.com
+      host: smtp.example.com
+      port: 25
+      username: from@example.com
+      password: secret
+    
+      
