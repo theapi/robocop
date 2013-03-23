@@ -2,13 +2,11 @@
 
 namespace Theapi\Robocop\Console;
 
-use Theapi\Robocop\Console\Command\EmailTestCommand;
-
-use Symfony\Component\Console\Input\InputArgument;
-
 use Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
-    Theapi\Robocop\Console\Command\InboxCommand;
+    Theapi\Robocop\Console\Command\InboxCommand,
+    Theapi\Robocop\Console\Command\EmailTestCommand,
+    Theapi\Robocop\Console\Command\SendEmailCommand;
 
 use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Application,
@@ -16,6 +14,7 @@ use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Input\InputDefinition,
     Symfony\Component\Console\Input\InputOption,
+    Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Output\OutputInterface,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\ContainerInterface,
@@ -74,6 +73,7 @@ class RobocopApplication extends Application
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new ImagesCommand();
         $defaultCommands[] = new EmailTestCommand();
+        $defaultCommands[] = new SendEmailCommand();
         $defaultCommands[] = new GreetCommand();
 
         return $defaultCommands;

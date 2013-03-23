@@ -8,5 +8,5 @@ parameters:
       port: 25
       username: from@example.com
       password: secret
-    
+      spool_dir: /tmp/robocop_spool
       
