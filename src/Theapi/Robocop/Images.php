@@ -50,13 +50,15 @@ class Images
         $img = trim(str_replace($dir, '', $images[$key]), '/');
         if ($val > 5000) {
           $text = '<question>' . $img . '</question>';
+          $text .= ': <info>' . $val . '</info>';
+          $this->output->writeln($text);
         }
         else {
-          $text = $img;
+          //$text = $img;
         }
-        $text .= ': <info>' . $val . '</info>';
+        //$text .= ': <info>' . $val . '</info>';
 
-        $this->output->writeln($text);
+        //$this->output->writeln($text);
       }
     }
   }
