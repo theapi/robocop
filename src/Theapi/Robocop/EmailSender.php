@@ -49,20 +49,15 @@ class EmailSender
     return $spool->flushQueue($transport);
   }
 
-  public function sendTestMail($viaSpool = false) {
-
-    // Create a message
-    if ($viaSpool) {
-      $txt = 'This message was sent from the spool.';
-    } else {
-      $txt = 'This message was sent directly via SMTP.';
-    }
-    $message = \Swift_Message::newInstance('Test from Robocop via Swift mailer')
+  public function sendMail($subject, $body, $filePath = NULL, $viaSpool = false) {
+    $message = \Swift_Message::newInstance($subject)
       ->setFrom(array($this->config['email']['from']))
       ->setTo(array($this->config['email']['to']))
-      ->setBody($txt)
-      ->attach(\Swift_Attachment::fromPath(__DIR__ . '/peter.jpg'))
+      ->setBody($body)
       ;
+    if (!empty($filePath)) {
+      $message->attach(\Swift_Attachment::fromPath($filePath));
+    }
 
     if ($viaSpool) {
       $spool = new \Swift_FileSpool($this->config['email']['spool_dir']);
@@ -79,6 +74,22 @@ class EmailSender
     $mailer = \Swift_Mailer::newInstance($transport);
 
     return $mailer->send($message);
+
+  }
+
+  public function sendTestMail($viaSpool = false) {
+
+    // Create a message
+    if ($viaSpool) {
+      $body = 'This message was sent from the spool.';
+    } else {
+      $body = 'This message was sent directly via SMTP.';
+    }
+
+    $subject = 'Test from Robocop via Swift mailer';
+    $filePath = __DIR__ . '/peter.jpg';
+
+    return $this->sendMail($subject, $body, $filePath, $viaSpool);
   }
 
 }
