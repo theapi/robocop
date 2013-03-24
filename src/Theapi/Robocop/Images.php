@@ -68,6 +68,8 @@ class Images
           }
           $this->copyWithDatestamp($i, $dir, $destinationDir, $img);
           $i++;
+        } else {
+          $this->output->writeln($img . ': ' . $val);
         }
       }
     }
