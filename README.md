@@ -5,9 +5,11 @@ Handle emails from the Swann CCTV system
 
 Requirements:
 
-http://pecl.php.net/package/mailparse
+Pecl extension to parse incoming mail - http://pecl.php.net/package/mailparse
 
-http://www.imagemagick.org/script/index.php
+ImageMagick to compare images - http://www.imagemagick.org
+
+avconv to create a video from still images - http://libav.org
 
 Install with composer:
 

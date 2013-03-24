@@ -74,6 +74,9 @@ class Images
         }
       }
     }
+
+    // Create a video of the detected images
+    $this->createVideo($destinationDir);
   }
 
   /**
@@ -83,6 +86,14 @@ class Images
    */
   public static function compare($img_a, $img_b, $fuzz = 10) {
     $cmd = 'compare -metric AE -fuzz ' . escapeshellarg($fuzz) . '% ' . escapeshellarg($img_a) . '  ' . escapeshellarg($img_b) . ' null: 2>&1';
+    $output = shell_exec($cmd);
+    return trim($output);
+  }
+
+  public function createVideo($dir) {
+    // avconv -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
+    $dir = escapeshellarg($dir);
+    $cmd = 'avconv -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/detected.avi';
     $output = shell_exec($cmd);
     return trim($output);
   }
