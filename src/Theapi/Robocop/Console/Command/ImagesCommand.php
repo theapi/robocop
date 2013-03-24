@@ -1,12 +1,12 @@
 <?php
 namespace Theapi\Robocop\Console\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
-
 use Theapi\Robocop\Images;
 
 use Symfony\Component\Console\Command\Command,
     Symfony\Component\Console\Input,
+    Symfony\Component\Console\Input\InputOption,
+    Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
 
@@ -28,6 +28,12 @@ class ImagesCommand extends Command
                 InputArgument::REQUIRED,
                 'Which folder in the base directory?'
             )
+            ->addOption(
+                'threshold',
+                 't',
+                 InputOption::VALUE_OPTIONAL,
+                 'The difference umber that makes an image noteworthy.'
+            )
             ->setHelp('
 Compare images for the amount of difference in <info>dir</info>.
             ')
@@ -42,7 +48,7 @@ Compare images for the amount of difference in <info>dir</info>.
 
       $dir = $input->getArgument('dir');
       $images = new Images($config, $output);
-      $images->compareDir($dir);
+      $images->compareDir($dir, $input->getOption('threshold'));
     }
 
 }

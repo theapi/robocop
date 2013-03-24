@@ -9,4 +9,6 @@ parameters:
       username: from@example.com
       password: secret
       spool_dir: /tmp/robocop_spool
+    images:
+      diff_threshold: 600
       

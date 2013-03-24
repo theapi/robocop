@@ -40,6 +40,7 @@ class Images
     if (empty($diffThreshold)) {
       $diffThreshold = $this->config['images']['diff_threshold'];
     }
+    settype($diffThreshold, 'int');
 
     $images = array();
     $files = scandir($dir);
@@ -91,7 +92,7 @@ class Images
     if ($im = imagecreatefromjpeg($source . '/' . $imgName)) {
       $textColor = imagecolorallocate ($im, 0, 0,0);
       imagestring ($im, 5, 3, 3, $string, $textColor);
-      imagejpeg($im, $destination . '/img_' . $i . '.jpg', 100);
+      imagejpeg($im, $destination . '/img_' . sprintf('%04d', $i) . '.jpg', 100);
     }
   }
 
