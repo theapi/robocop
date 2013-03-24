@@ -26,7 +26,7 @@ class ImagesCommand extends Command
             ->addArgument(
                 'dir',
                 InputArgument::REQUIRED,
-                'Where are the images?'
+                'Which folder in the base directory?'
             )
             ->setHelp('
 Compare images for the amount of difference in <info>dir</info>.
