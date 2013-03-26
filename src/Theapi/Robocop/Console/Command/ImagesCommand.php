@@ -25,7 +25,7 @@ class ImagesCommand extends Command
             ->setDescription('Analyse images that have been received')
             ->addArgument(
                 'dir',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'Which folder in the base directory?'
             )
             ->addOption(

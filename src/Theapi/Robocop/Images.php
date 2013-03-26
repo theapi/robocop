@@ -29,7 +29,12 @@ class Images
     $this->output = $output;
   }
 
-  public function compareDir($imagesDir, $diffThreshold = null) {
+  public function compareDir($imagesDir = null, $diffThreshold = null) {
+
+    if (empty($imagesDir)) {
+      // Use the directory for today
+      $imagesDir = date('Y-m-d');
+    }
 
     $dir = $this->config['save_dir'] . '/' . trim($imagesDir, '/');
     if (!is_dir($dir)) {
