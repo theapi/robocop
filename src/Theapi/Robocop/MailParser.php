@@ -62,7 +62,7 @@ class MailParser
   protected function saveAttachments() {
     $attachments = $this->parser->getAttachments();
     if (is_array($attachments) && count($attachments) > 0 ) {
-      $dir = $this->config->save_dir . '/' . date('Y-m-d');
+      $dir = $this->config->save_dir . '/in_' . date('Y-m-d');
       foreach($attachments as $attachment) {
         // get the attachment name
         $filename = $attachment->filename;

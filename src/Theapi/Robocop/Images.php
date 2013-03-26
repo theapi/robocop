@@ -29,18 +29,21 @@ class Images
     $this->output = $output;
   }
 
-  public function compareDir($imagesDir = null, $diffThreshold = null) {
+  public function compareDir($date = null, $diffThreshold = null) {
 
-    if (empty($imagesDir)) {
+    if (empty($date)) {
       // Use the directory for today
-      $imagesDir = date('Y-m-d');
+      $date = date('Y-m-d');
+    } else {
+      // enforce date is in the format Y-m-d
+      $date = date('Y-m-d', strtotime($date));
     }
 
-    $dir = $this->config['save_dir'] . '/' . trim($imagesDir, '/');
+    $dir = $this->config['save_dir'] . '/in_' . $date;
     if (!is_dir($dir)) {
       throw new \Exception($dir . ' is not a directory');
     }
-    $destinationDir = $this->config['save_dir'] . '/detected_' . trim($imagesDir, '/');
+    $destinationDir = $this->config['save_dir'] . '/p_' . $date;
 
     if (empty($diffThreshold)) {
       $diffThreshold = $this->config['images']['diff_threshold'];
@@ -98,9 +101,53 @@ class Images
   public function createVideo($dir) {
     // avconv -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
     $dir = escapeshellarg($dir);
-    $cmd = 'avconv -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/detected.avi';
+    $cmd = 'avconv -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/activity.avi';
     $output = shell_exec($cmd);
     return trim($output);
+  }
+
+  public function deleteOldDirectories($processed = false) {
+
+    if (!empty($processed)) {
+      $dirPrefix = 'p_';
+    } else {
+      $dirPrefix = 'in_';
+    }
+
+    if (!empty($this->config['images']['days_old'])) {
+      $daysOld = $this->config['images']['days_old'];
+    } else {
+      $daysOld = 14;
+    }
+
+    $old = $daysOld * 24 * 60 * 60;
+    $nt = time();
+    $dir = $this->config['save_dir'];
+    $files = scandir($dir);
+    foreach ($files as $file) {
+      if (substr($file, 0, strlen($dirPrefix)) == $dirPrefix) {
+        $date = str_replace($dirPrefix, '', $file);
+        $ut = strtotime($date);
+        $age = $nt - $ut;
+        if ($age > $old) {
+          $this->deleteDirectory($dir . '/' . $file);
+        }
+      }
+    }
+  }
+
+  public function deleteDirectory($dir) {
+    if (is_dir($dir)) {
+      // delete the contents
+      $files = scandir($dir);
+      foreach ($files as $file) {
+        if ($file != '.' && $file != '..') {
+          unlink($dir . '/' . $file);
+        }
+      }
+      // delete directory
+      rmdir($dir);
+    }
   }
 
   protected function copyWithDatestamp($i, $source, $destination, $imgName) {

@@ -24,15 +24,21 @@ class ImagesCommand extends Command
             ->setName('images')
             ->setDescription('Analyse images that have been received')
             ->addArgument(
-                'dir',
+                'date',
                 InputArgument::OPTIONAL,
-                'Which folder in the base directory?'
+                'Which date to process (Y-m-d)? or <info>purge</info> to delete old directories'
             )
             ->addOption(
                 'threshold',
                  't',
                  InputOption::VALUE_OPTIONAL,
-                 'The difference umber that makes an image noteworthy.'
+                 'The difference number that makes an image noteworthy.'
+            )
+            ->addOption(
+                'processed',
+                 'P',
+                 InputOption::VALUE_NONE,
+                 'When purging, purge the processed directories.'
             )
             ->setHelp('
 Compare images for the amount of difference in <info>dir</info>.
@@ -46,9 +52,15 @@ Compare images for the amount of difference in <info>dir</info>.
       $container = $app->getContainer();
       $config = $container->getParameter('robocop');
 
-      $dir = $input->getArgument('dir');
       $images = new Images($config, $output);
-      $images->compareDir($dir, $input->getOption('threshold'));
+
+      $date = $input->getArgument('date');
+      if (!empty($date) && $date == 'purge') {
+        $images->deleteOldDirectories($input->getOption('processed'));
+      } else {
+        $date = $input->getArgument('date');
+        $images->compareDir($date, $input->getOption('threshold'));
+      }
     }
 
 }
