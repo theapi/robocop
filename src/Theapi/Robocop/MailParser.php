@@ -59,6 +59,10 @@ class MailParser
 
   }
 
+  protected function passOnMessage() {
+    // send with swiftmail
+  }
+
   protected function saveAttachments() {
     $attachments = $this->parser->getAttachments();
     if (is_array($attachments) && count($attachments) > 0 ) {
