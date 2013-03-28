@@ -2,6 +2,8 @@
 
 namespace Theapi\Robocop\Console;
 
+use Theapi\Robocop\EmailSender;
+
 use Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
     Theapi\Robocop\Console\Command\InboxCommand,
@@ -40,6 +42,9 @@ class RobocopApplication extends Application
         $this->container = new ContainerBuilder();
         $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
         $loader->load('config.yml');
+
+        // Add the mailer service to the container
+        $this->container->set('mailer', new EmailSender($this->container->getParameter('robocop')));
     }
 
     public function getContainer() {

@@ -36,9 +36,9 @@ class EmailTestCommand extends Command
     {
       $app = $this->getApplication();
       $container = $app->getContainer();
-      $config = $container->getParameter('robocop');
 
-      $mailer = new EmailSender($config);
+      $mailer = $container->get('mailer');
+
       $viaSpool = $input->getOption('spool');
       $sent = $mailer->sendTestMail($viaSpool);
       if ($viaSpool) {
