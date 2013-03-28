@@ -99,9 +99,9 @@ class Images
   }
 
   public function createVideo($dir) {
-    // avconv -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
+    // avconv -y -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
     $dir = escapeshellarg($dir);
-    $cmd = 'avconv -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/activity.avi';
+    $cmd = 'avconv -y -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/activity.avi';
     $output = shell_exec($cmd);
     return trim($output);
   }
