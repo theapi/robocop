@@ -42,8 +42,8 @@ class MailParser
         $this->processSnaps();
         break;
       default:
-       // $this->passOnMessage();
-        $this->processSnaps();
+        $this->passOnMessage();
+        //$this->processSnaps();
         break;
     }
   }
@@ -62,6 +62,15 @@ class MailParser
 
   protected function passOnMessage() {
     // send with swiftmail
+    // TODO: get the mailer via dependency injection
+    $mailer = new EmailSender($this->config);
+    $subject = $this->parser->getHeader('subject');
+    $body = $this->parser->getMessageBody('text');
+    $viaSpool = false; //TODO get via_spool from config
+    $sent = $mailer->sendMail($subject, $body, null, $viaSpool);
+    if ($viaSpool) {
+      $mailer->processSpoolInBackground();
+    }
   }
 
   protected function saveAttachments() {

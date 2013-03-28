@@ -92,4 +92,7 @@ class EmailSender
     return $this->sendMail($subject, $body, $filePath, $viaSpool);
   }
 
+  public function processSpoolInBackground() {
+    //TODO: use shell_exec to call /app/robocop email:send in the background
+  }
 }
