@@ -8,6 +8,7 @@ parameters:
       port: 25
       username: from@example.com
       password: secret
+      spool: 1
       spool_dir: /tmp/robocop_spool
     images:
       diff_threshold: 600

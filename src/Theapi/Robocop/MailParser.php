@@ -66,11 +66,7 @@ class MailParser
     $mailer = new EmailSender($this->config);
     $subject = $this->parser->getHeader('subject');
     $body = $this->parser->getMessageBody('text');
-    $viaSpool = false; //TODO get via_spool from config
-    $sent = $mailer->sendMail($subject, $body, null, $viaSpool);
-    if ($viaSpool) {
-      $mailer->processSpoolInBackground();
-    }
+    $sent = $mailer->sendMail($subject, $body, null);
   }
 
   protected function saveAttachments() {

@@ -49,7 +49,7 @@ class EmailSender
     return $spool->flushQueue($transport);
   }
 
-  public function sendMail($subject, $body, $filePath = NULL, $viaSpool = false) {
+  public function sendMail($subject, $body, $filePath = null, $viaSpool = null) {
     $message = \Swift_Message::newInstance($subject)
       ->setFrom(array($this->config['email']['from']))
       ->setTo(array($this->config['email']['to']))
@@ -57,6 +57,12 @@ class EmailSender
       ;
     if (!empty($filePath)) {
       $message->attach(\Swift_Attachment::fromPath($filePath));
+    }
+
+    if (is_null($viaSpool) && !empty($this->config['email']['spool'])) {
+      $viaSpool = (bool) $this->config['email']['spool'];
+    } else {
+      $viaSpool = false;
     }
 
     if ($viaSpool) {
@@ -73,8 +79,13 @@ class EmailSender
     // Create the Mailer using the Transport
     $mailer = \Swift_Mailer::newInstance($transport);
 
-    return $mailer->send($message);
+    $sent = $mailer->send($message);
 
+    if ($viaSpool) {
+      $this->processSpoolInBackground();
+    }
+
+    return $sent;
   }
 
   public function sendTestMail($viaSpool = false) {
