@@ -64,7 +64,7 @@ class MailParser
     // send with swiftmail
     // TODO: get the mailer via dependency injection
     $mailer = new EmailSender($this->config);
-    $subject = $this->parser->getHeader('subject');
+    $subject = '(Robocop) ' . $this->parser->getHeader('subject');
     $body = $this->parser->getMessageBody('text');
     $sent = $mailer->sendMail($subject, $body, null);
   }
