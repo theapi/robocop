@@ -44,24 +44,6 @@ class RobocopApplication extends Application
         $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
         $loader->load('config.yml');
 
-        // Add the config as an available parameter to services
-        $this->container->setParameter('config', $this->container->getParameter('robocop'));
-
-        // Register the mailer service to the container
-        $this->container
-          ->register('mailer', 'Theapi\Robocop\EmailSender')
-          ->addArgument('%config%');
-
-        // Register the images service to the container
-        $this->container
-          ->register('images', 'Theapi\Robocop\Images')
-          ->addArgument('%config%');
-
-        // Register the mail parser service to the container
-        $this->container
-          ->register('mail_parser', 'Theapi\Robocop\MailParser')
-          ->addArgument('%config%')
-          ->addMethodCall('setMailer', array(new Reference('mailer')));
     }
 
     public function getContainer() {

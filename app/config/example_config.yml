@@ -13,3 +13,16 @@ parameters:
     images:
       diff_threshold: 600
       
+services:
+  mailer: 
+    class: Theapi\Robocop\EmailSender
+    arguments: [%config%]
+  images: 
+    class: Theapi\Robocop\Images
+    arguments: [%config%]
+  mail_parser: 
+    class: Theapi\Robocop\MailParser
+    arguments: [%config%]
+    calls:
+      - [ setMailer, [ @mailer ] ]
+  
