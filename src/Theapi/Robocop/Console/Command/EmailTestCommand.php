@@ -34,8 +34,7 @@ class EmailTestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      $app = $this->getApplication();
-      $container = $app->getContainer();
+      $container = $this->getApplication()->getContainer();
 
       $mailer = $container->get('mailer');
 

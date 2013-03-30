@@ -38,11 +38,10 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      $app = $this->getApplication();
-      $container = $app->getContainer();
-      $config = $container->getParameter('robocop');
+      $container = $this->getApplication()->getContainer();
 
-      $mailer = new EmailSender($config);
+      $mailer = $container->get('mailer');
+
       $sent = $mailer->sendSpool(
         $input->getOption('message-limit'),
         $input->getOption('time-limit'),

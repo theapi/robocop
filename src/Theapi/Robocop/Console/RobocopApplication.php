@@ -2,8 +2,6 @@
 
 namespace Theapi\Robocop\Console;
 
-use Theapi\Robocop\EmailSender;
-
 use Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
     Theapi\Robocop\Console\Command\InboxCommand,
@@ -20,7 +18,8 @@ use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Output\OutputInterface,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+    Symfony\Component\DependencyInjection\Loader\YamlFileLoader,
+    Symfony\Component\DependencyInjection\Reference;
 
 
 /**
@@ -40,11 +39,29 @@ class RobocopApplication extends Application
         parent::__construct('Robocop', $version);
 
         $this->container = new ContainerBuilder();
+
+        // Add the config to the container
         $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
         $loader->load('config.yml');
 
-        // Add the mailer service to the container
-        $this->container->set('mailer', new EmailSender($this->container->getParameter('robocop')));
+        // Add the config as an available parameter to services
+        $this->container->setParameter('config', $this->container->getParameter('robocop'));
+
+        // Register the mailer service to the container
+        $this->container
+          ->register('mailer', 'Theapi\Robocop\EmailSender')
+          ->addArgument('%config%');
+
+        // Register the images service to the container
+        $this->container
+          ->register('images', 'Theapi\Robocop\Images')
+          ->addArgument('%config%');
+
+        // Register the mail parser service to the container
+        $this->container
+          ->register('mail_parser', 'Theapi\Robocop\MailParser')
+          ->addArgument('%config%')
+          ->addMethodCall('setMailer', array(new Reference('mailer')));
     }
 
     public function getContainer() {
@@ -61,8 +78,6 @@ class RobocopApplication extends Application
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-       // $this->add($this->createCommand($input));
-
         return parent::doRun($input, $output);
     }
 
@@ -73,14 +88,13 @@ class RobocopApplication extends Application
      */
     protected function getDefaultCommands()
     {
-        // Keep the core default commands to have the HelpCommand
+        // Keep the core default commandsGreetCommand to have the HelpCommand
         // which is used when using the --help option
         $defaultCommands = parent::getDefaultCommands();
         $defaultCommands[] = new ImagesCommand();
         $defaultCommands[] = new EmailTestCommand();
         $defaultCommands[] = new SendEmailCommand();
         $defaultCommands[] = new GreetCommand();
-
         return $defaultCommands;
     }
 

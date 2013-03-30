@@ -22,10 +22,18 @@ class Images
   protected $config;
 
   /**
+   * The OutputInterface object
+   */
+  protected $output;
+
+  /**
    * Constructor
    */
-  public function __construct($config, $output) {
+  public function __construct($config) {
     $this->config = $config;
+  }
+
+  public function setOutput(OutputInterface $output) {
     $this->output = $output;
   }
 
@@ -67,7 +75,7 @@ class Images
         $img = trim(str_replace($dir, '', $images[$key]), '/');
         if ($val > $diffThreshold) {
           $text = $img . ': <info>' . $val . '</info>';
-          $this->output->writeln($text);
+          $this->writeln($text);
 
           // copy image to a separate directory
           if (!file_exists($destinationDir)) {
@@ -78,7 +86,7 @@ class Images
           $this->copyWithDatestamp($i, $dir, $destinationDir, $img);
           $i++;
         } else {
-          $this->output->writeln($img . ': ' . $val);
+          $this->writeln($img . ': ' . $val);
         }
       }
     }
@@ -156,6 +164,12 @@ class Images
       $textColor = imagecolorallocate ($im, 0, 0,0);
       imagestring ($im, 5, 3, 3, $string, $textColor);
       imagejpeg($im, $destination . '/img_' . sprintf('%04d', $i) . '.jpg', 100);
+    }
+  }
+
+  protected function writeln($str) {
+    if (!empty($this->output)) {
+      $this->output->writeln($str);
     }
   }
 

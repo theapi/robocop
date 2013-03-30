@@ -26,6 +26,11 @@ class MailParser
   protected $config;
 
   /**
+   * Mail sending object
+   */
+  protected $mailer;
+
+  /**
    * Constructor
    *
    */
@@ -48,6 +53,10 @@ class MailParser
     }
   }
 
+  public function setMailer($mailer) {
+    $this->mailer = $mailer;
+  }
+
   protected function processSnaps() {
     if (!$this->saveAttachments()) {
       // no attachments
@@ -61,12 +70,11 @@ class MailParser
   }
 
   protected function passOnMessage() {
-    // send with swiftmail
-    // TODO: get the mailer via dependency injection
-    $mailer = new EmailSender($this->config);
-    $subject = '(Robocop) ' . $this->parser->getHeader('subject');
-    $body = $this->parser->getMessageBody('text');
-    $sent = $mailer->sendMail($subject, $body, null);
+    if (!empty($this->mailer)) {
+      $subject = '(Robocop) ' . $this->parser->getHeader('subject');
+      $body = $this->parser->getMessageBody('text');
+      $sent = $this->mailer->sendMail($subject, $body, null);
+    }
   }
 
   protected function saveAttachments() {

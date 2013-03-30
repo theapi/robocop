@@ -48,11 +48,10 @@ Compare images for the amount of difference in <info>dir</info>.
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      $app = $this->getApplication();
-      $container = $app->getContainer();
-      $config = $container->getParameter('robocop');
+      $container = $this->getApplication()->getContainer();
 
-      $images = new Images($config, $output);
+      $images = $container->get('images');
+      $images->setOutput($output);
 
       $date = $input->getArgument('date');
       if (!empty($date) && $date == 'purge') {

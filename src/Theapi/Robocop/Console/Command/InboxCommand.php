@@ -30,11 +30,9 @@ In ~/.redirect for the mail box to be processed, put:
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      $app = $this->getApplication();
-      $container = $app->getContainer();
-      $config = $container->getParameter('robocop');
+      $container = $this->getApplication()->getContainer();
 
-      $mailParser = new MailParser($config);
+      $mailParser = $container->get('mail_parser');
       $mailParser->processIncomingMail();
     }
 
