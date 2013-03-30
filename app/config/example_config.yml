@@ -1,5 +1,5 @@
 parameters:
-  robocop:
+  config:
     save_dir: /home/cctv
     email:
       from: from@example.com
