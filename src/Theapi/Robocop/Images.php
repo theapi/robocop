@@ -1,8 +1,7 @@
 <?php
 namespace Theapi\Robocop;
 
-use Symfony\Component\Console\Output\OutputInterface,
-    Symfony\Component\Process\Process;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  *
@@ -28,10 +27,16 @@ class Images
   protected $output;
 
   /**
+   * A Symfony\Component\Process object
+   */
+  protected $process;
+
+  /**
    * Constructor
    */
-  public function __construct($config) {
+  public function __construct($config, $process) {
     $this->config = $config;
+    $this->process = $process;
   }
 
   public function setOutput(OutputInterface $output) {
@@ -101,14 +106,15 @@ class Images
    *
    * @see http://www.imagemagick.org/Usage/compare/
    */
-  public static function compare($img_a, $img_b, $fuzz = 10) {
+  public function compare($img_a, $img_b, $fuzz = 10) {
     $cmd = 'compare -metric AE -fuzz ' . escapeshellarg($fuzz) . '% ' . escapeshellarg($img_a) . '  ' . escapeshellarg($img_b) . ' null: 2>&1';
-    $process = new Process($cmd);
-    $process->run();
-    if (!$process->isSuccessful()) {
-      throw new \RuntimeException($process->getErrorOutput());
+    //$process = new Process($cmd);
+    $this->process->setCommandLine($cmd);
+    $this->process->run();
+    if (!$this->process->isSuccessful()) {
+      throw new \RuntimeException($this->process->getErrorOutput());
     }
-    $output = $process->getOutput();
+    $output = $this->process->getOutput();
     return trim($output);
   }
 
@@ -116,12 +122,12 @@ class Images
     // avconv -y -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
     $dir = escapeshellarg($dir);
     $cmd = 'avconv -y -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/activity.avi';
-    $process = new Process($cmd);
-    $process->run();
-    if (!$process->isSuccessful()) {
-      throw new \RuntimeException($process->getErrorOutput());
+    $this->process->setCommandLine($cmd);
+    $this->process->run();
+    if (!$this->process->isSuccessful()) {
+      throw new \RuntimeException($this->process->getErrorOutput());
     }
-    $output = $process->getOutput();
+    $output = $this->process->getOutput();
     return trim($output);
   }
 

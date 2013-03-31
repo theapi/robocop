@@ -3,6 +3,7 @@
 namespace Theapi\Robocop\Console;
 
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+//use Symfony\Component\Process\Process;
 
 use Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
