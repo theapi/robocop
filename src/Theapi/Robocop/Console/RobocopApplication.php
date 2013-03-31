@@ -2,11 +2,14 @@
 
 namespace Theapi\Robocop\Console;
 
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+
 use Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
     Theapi\Robocop\Console\Command\InboxCommand,
     Theapi\Robocop\Console\Command\EmailTestCommand,
-    Theapi\Robocop\Console\Command\SendEmailCommand;
+    Theapi\Robocop\Console\Command\SendEmailCommand,
+    Theapi\Robocop\Console\Command\ClearCacheCommand;
 
 use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Application,
@@ -38,12 +41,35 @@ class RobocopApplication extends Application
     {
         parent::__construct('Robocop', $version);
 
-        $this->container = new ContainerBuilder();
+        // Use cached container if it exists
+        $file = self::getContainerCacheFile();
+        if (file_exists($file)) {
+            require_once $file;
+            $this->container = new \RobocopApplicationContainer();
+        } else {
+            $this->container = new ContainerBuilder();
+            $this->container->setResourceTracking(true);
 
-        // Add the config to the container
-        $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
-        $loader->load('config.yml');
+            // Add the config to the container
+            $loader = new YamlFileLoader($this->container, new FileLocator(dirname(ROBOCOP_BIN_PATH) . '/config'));
+            $loader->load('config.yml');
+            $this->container->compile();
 
+            // Cache the config
+            $dumper = new PhpDumper($this->container);
+            $cacheDir = dirname($file);
+            if (!file_exists($cacheDir)) {
+                if (!mkdir($cacheDir, 0755, true)) {
+                  throw new \Exception('Unable to create cache directory [' . $cacheDir . ']');
+                }
+            }
+            file_put_contents($file, $dumper->dump(array('class' => 'RobocopApplicationContainer')));
+        }
+
+    }
+
+    public static function getContainerCacheFile() {
+      return dirname(ROBOCOP_BIN_PATH) . '/cache/RobocopApplicationContainer.php';
     }
 
     public function getContainer() {
@@ -77,6 +103,7 @@ class RobocopApplication extends Application
         $defaultCommands[] = new EmailTestCommand();
         $defaultCommands[] = new SendEmailCommand();
         $defaultCommands[] = new GreetCommand();
+        $defaultCommands[] = new ClearCacheCommand();
         return $defaultCommands;
     }
 
