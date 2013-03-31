@@ -31,8 +31,9 @@
         "symfony/console":               ">=2.0,<2.3-dev",
         "symfony/config":                ">=2.0,<2.3-dev",
         "symfony/dependency-injection":  ">=2.0,<2.3-dev",
-        "swiftmailer/swiftmailer": ">=4.2.0,<4.4-dev",
+        "swiftmailer/swiftmailer":       ">=4.2.0,<4.4-dev",
         "symfony/yaml":                  ">=2.0,<2.3-dev",
+        "symfony/process":               ">=2.2,<2.3-dev",
         "php-mime-mail-parser/php-mime-mail-parser": "dev-master"
     },
     

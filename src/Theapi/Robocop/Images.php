@@ -1,7 +1,8 @@
 <?php
 namespace Theapi\Robocop;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\OutputInterface,
+    Symfony\Component\Process\Process;
 
 /**
  *
@@ -102,7 +103,12 @@ class Images
    */
   public static function compare($img_a, $img_b, $fuzz = 10) {
     $cmd = 'compare -metric AE -fuzz ' . escapeshellarg($fuzz) . '% ' . escapeshellarg($img_a) . '  ' . escapeshellarg($img_b) . ' null: 2>&1';
-    $output = shell_exec($cmd);
+    $process = new Process($cmd);
+    $process->run();
+    if (!$process->isSuccessful()) {
+      throw new \RuntimeException($process->getErrorOutput());
+    }
+    $output = $process->getOutput();
     return trim($output);
   }
 
@@ -110,7 +116,12 @@ class Images
     // avconv -y -v quiet -r 1 -f image2 -i img_%04d.jpg -r 25 -b 65536k a.avi
     $dir = escapeshellarg($dir);
     $cmd = 'avconv -y -v quiet -r 1 -f image2 -i ' . $dir . '/img_%04d.jpg -r 25 -b 65536k ' . $dir . '/activity.avi';
-    $output = shell_exec($cmd);
+    $process = new Process($cmd);
+    $process->run();
+    if (!$process->isSuccessful()) {
+      throw new \RuntimeException($process->getErrorOutput());
+    }
+    $output = $process->getOutput();
     return trim($output);
   }
 
