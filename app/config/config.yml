@@ -1,0 +1,19 @@
+imports:
+  - { resource: parameters.yml }
+    
+services:
+  process: 
+    class: Symfony\Component\Process\Process
+    arguments: [null]
+  mailer: 
+    class: Theapi\Robocop\EmailSender
+    arguments: [%config%]
+  images: 
+    class: Theapi\Robocop\Images
+    arguments: [%config%, @process]
+  mail_parser: 
+    class: Theapi\Robocop\MailParser
+    arguments: [%config%]
+    calls:
+      - [ setMailer, [ @mailer ] ]
+  

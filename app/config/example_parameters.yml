@@ -1,0 +1,14 @@
+parameters:
+  config:
+    save_dir: /home/cctv
+    email:
+      from: from@example.com
+      to: to@example.com
+      host: smtp.example.com
+      port: 25
+      username: from@example.com
+      password: secret
+      spool: 1
+      spool_dir: /tmp/robocop_spool
+    images:
+      diff_threshold: 600

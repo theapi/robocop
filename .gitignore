@@ -1,8 +1,4 @@
-GifCreator
-PHPMailer
-php-mime-mail-parser
-config.php
-app/config/config.yml
+app/config/parameters.yml
 app/cache
 vendor
 composer.lock
