@@ -16,7 +16,7 @@ class ClearCacheCommand extends Command
 
     public function __construct()
     {
-        parent::__construct('email:send');
+        parent::__construct('cache:clear');
     }
 
     protected function configure()
