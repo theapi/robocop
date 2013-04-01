@@ -2,10 +2,9 @@
 
 namespace Theapi\Robocop\Console;
 
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-//use Symfony\Component\Process\Process;
 
-use Theapi\Robocop\Console\Command\GreetCommand,
+use Theapi\Robocop\Console\Command\CronCommand,
+    Theapi\Robocop\Console\Command\GreetCommand,
     Theapi\Robocop\Console\Command\ImagesCommand,
     Theapi\Robocop\Console\Command\InboxCommand,
     Theapi\Robocop\Console\Command\EmailTestCommand,
@@ -20,6 +19,7 @@ use Symfony\Component\Config\FileLocator,
     Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Output\OutputInterface,
+    Symfony\Component\DependencyInjection\Dumper\PhpDumper,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\Loader\YamlFileLoader,
@@ -105,6 +105,7 @@ class RobocopApplication extends Application
         $defaultCommands[] = new SendEmailCommand();
         $defaultCommands[] = new GreetCommand();
         $defaultCommands[] = new ClearCacheCommand();
+        $defaultCommands[] = new CronCommand();
         return $defaultCommands;
     }
 
