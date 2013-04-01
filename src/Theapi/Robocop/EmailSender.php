@@ -29,13 +29,13 @@ class EmailSender
   }
 
   public function sendSpool($messageLimit = 10, $timeLimit = 100, $recoverTimeout = 900) {
-    $fileSpool = new \Swift_FileSpool($this->config['email']['spool_dir']);
+    $fileSpool = new \Swift_FileSpool($this->config['spool_dir']);
     $spoolTransport = \Swift_SpoolTransport::newInstance($fileSpool);
 
     // Create the SMTP Transport
-    $transport = \Swift_SmtpTransport::newInstance($this->config['email']['host'], $this->config['email']['port'], 'tls')
-      ->setUsername($this->config['email']['username'])
-      ->setPassword($this->config['email']['password'])
+    $transport = \Swift_SmtpTransport::newInstance($this->config['host'], $this->config['port'], 'tls')
+      ->setUsername($this->config['username'])
+      ->setPassword($this->config['password'])
       ;
 
     $spool = $spoolTransport->getSpool();
@@ -51,28 +51,28 @@ class EmailSender
 
   public function sendMail($subject, $body, $filePath = null, $viaSpool = null) {
     $message = \Swift_Message::newInstance($subject)
-      ->setFrom(array($this->config['email']['from']))
-      ->setTo(array($this->config['email']['to']))
+      ->setFrom(array($this->config['from']))
+      ->setTo(array($this->config['to']))
       ->setBody($body)
       ;
     if (!empty($filePath)) {
       $message->attach(\Swift_Attachment::fromPath($filePath));
     }
 
-    if (is_null($viaSpool) && !empty($this->config['email']['spool'])) {
-      $viaSpool = (bool) $this->config['email']['spool'];
+    if (is_null($viaSpool) && !empty($this->config['spool'])) {
+      $viaSpool = (bool) $this->config['spool'];
     } else {
       $viaSpool = false;
     }
 
     if ($viaSpool) {
-      $spool = new \Swift_FileSpool($this->config['email']['spool_dir']);
+      $spool = new \Swift_FileSpool($this->config['spool_dir']);
       $transport = \Swift_SpoolTransport::newInstance($spool);
     } else {
       // Create the SMTP Transport
-      $transport = \Swift_SmtpTransport::newInstance($this->config['email']['host'], $this->config['email']['port'], 'tls')
-        ->setUsername($this->config['email']['username'])
-        ->setPassword($this->config['email']['password'])
+      $transport = \Swift_SmtpTransport::newInstance($this->config['host'], $this->config['port'], 'tls')
+        ->setUsername($this->config['username'])
+        ->setPassword($this->config['password'])
         ;
     }
 

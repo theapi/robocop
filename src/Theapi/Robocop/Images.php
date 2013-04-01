@@ -22,6 +22,11 @@ class Images
   protected $config;
 
   /**
+   * Where the images get saved
+   */
+  protected $saveDir;
+
+  /**
    * The OutputInterface object
    */
   protected $output;
@@ -34,7 +39,8 @@ class Images
   /**
    * Constructor
    */
-  public function __construct($config, $process) {
+  public function __construct($saveDir, $config, $process) {
+    $this->saveDir = $saveDir;
     $this->config = $config;
     $this->process = $process;
   }
@@ -53,14 +59,14 @@ class Images
       $date = date('Y-m-d', strtotime($date));
     }
 
-    $dir = $this->config['save_dir'] . '/in_' . $date;
+    $dir = $this->saveDir . '/in_' . $date;
     if (!is_dir($dir)) {
       throw new \Exception($dir . ' is not a directory');
     }
-    $destinationDir = $this->config['save_dir'] . '/p_' . $date;
+    $destinationDir = $this->saveDir . '/p_' . $date;
 
     if (empty($diffThreshold)) {
-      $diffThreshold = $this->config['images']['diff_threshold'];
+      $diffThreshold = $this->config['diff_threshold'];
     }
     settype($diffThreshold, 'int');
 
@@ -139,15 +145,15 @@ class Images
       $dirPrefix = 'in_';
     }
 
-    if (!empty($this->config['images']['days_old'])) {
-      $daysOld = $this->config['images']['days_old'];
+    if (!empty($this->config['days_old'])) {
+      $daysOld = $this->config['days_old'];
     } else {
       $daysOld = 14;
     }
 
     $old = $daysOld * 24 * 60 * 60;
     $nt = time();
-    $dir = $this->config['save_dir'];
+    $dir = $this->saveDir;
     $files = scandir($dir);
     foreach ($files as $file) {
       if (substr($file, 0, strlen($dirPrefix)) == $dirPrefix) {

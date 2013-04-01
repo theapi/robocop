@@ -21,9 +21,9 @@ class MailParser
   protected $parser;
 
   /**
-   * The configuration array
+   * Where the images get saved
    */
-  protected $config;
+  protected $saveDir;
 
   /**
    * Mail sending object
@@ -34,8 +34,8 @@ class MailParser
    * Constructor
    *
    */
-  public function __construct($config) {
-    $this->config = $config;
+  public function __construct($saveDir) {
+    $this->saveDir = $saveDir;
     $this->parser = new \MimeMailParser();
   }
 
@@ -80,7 +80,7 @@ class MailParser
   protected function saveAttachments() {
     $attachments = $this->parser->getAttachments();
     if (is_array($attachments) && count($attachments) > 0 ) {
-      $dir = $this->config['save_dir'] . '/in_' . date('Y-m-d');
+      $dir = $this->saveDir . '/in_' . date('Y-m-d');
       foreach($attachments as $attachment) {
         // get the attachment name
         $filename = $attachment->filename;

@@ -2,18 +2,22 @@ imports:
   - { resource: parameters.yml }
     
 services:
+
   process: 
     class: Symfony\Component\Process\Process
     arguments: [null]
+    
   mailer: 
     class: Theapi\Robocop\EmailSender
-    arguments: [%config%]
+    arguments: [%email%]
+    
   images: 
     class: Theapi\Robocop\Images
-    arguments: [%config%, @process]
+    arguments: [%save_dir%, %images%, @process]
+    
   mail_parser: 
     class: Theapi\Robocop\MailParser
-    arguments: [%config%]
+    arguments: [%save_dir%]
     calls:
       - [ setMailer, [ @mailer ] ]
   
