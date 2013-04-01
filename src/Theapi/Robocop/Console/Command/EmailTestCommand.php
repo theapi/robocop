@@ -39,6 +39,13 @@ class EmailTestCommand extends Command
       $mailer = $container->get('mailer');
 
       $viaSpool = $input->getOption('spool');
+
+      if (empty($viaSpool)) {
+        // Use the spool setting from config.yml
+        $emailConfig = $container->getParameter('email');
+        $viaSpool = (bool) $emailConfig['spool'];
+      }
+
       $sent = $mailer->sendTestMail($viaSpool);
       if ($viaSpool) {
         $output->writeln(sprintf('Spooled <info>%s</info>', $sent));

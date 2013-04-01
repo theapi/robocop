@@ -10,6 +10,8 @@ services:
   mailer: 
     class: Theapi\Robocop\EmailSender
     arguments: [%email%]
+    calls:
+      - [ setProcess, [ @process ] ]
     
   images: 
     class: Theapi\Robocop\Images

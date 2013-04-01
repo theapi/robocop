@@ -21,6 +21,11 @@ class EmailSender
   protected $config;
 
   /**
+   * A Symfony\Component\Process object
+   */
+  protected $process;
+
+  /**
    * Constructor
    *
    */
@@ -28,7 +33,24 @@ class EmailSender
     $this->config = $config;
   }
 
+  public function setProcess($process) {
+    $this->process = $process;
+  }
+
   public function sendSpool($messageLimit = 10, $timeLimit = 100, $recoverTimeout = 900) {
+
+    if (empty($messageLimit)) {
+      $messageLimit = 10;
+    }
+
+    if (empty($timeLimit)) {
+      $timeLimit = 100;
+    }
+
+    if (empty($recoverTimeout)) {
+      $recoverTimeout = 900;
+    }
+
     $fileSpool = new \Swift_FileSpool($this->config['spool_dir']);
     $spoolTransport = \Swift_SpoolTransport::newInstance($fileSpool);
 
@@ -49,7 +71,7 @@ class EmailSender
     return $spool->flushQueue($transport);
   }
 
-  public function sendMail($subject, $body, $filePath = null, $viaSpool = null) {
+  public function sendMail($subject, $body, $filePath = null, $viaSpool = false) {
     $message = \Swift_Message::newInstance($subject)
       ->setFrom(array($this->config['from']))
       ->setTo(array($this->config['to']))
@@ -61,11 +83,16 @@ class EmailSender
 
     if (is_null($viaSpool) && !empty($this->config['spool'])) {
       $viaSpool = (bool) $this->config['spool'];
-    } else {
-      $viaSpool = false;
     }
 
     if ($viaSpool) {
+
+      if (!file_exists($this->config['spool_dir'])) {
+          if (!mkdir($this->config['spool_dir'], 0755, true)) {
+            throw new \Exception('Unable to create spool directory [' . $this->config['spool_dir'] . ']');
+          }
+      }
+
       $spool = new \Swift_FileSpool($this->config['spool_dir']);
       $transport = \Swift_SpoolTransport::newInstance($spool);
     } else {
@@ -103,7 +130,10 @@ class EmailSender
     return $this->sendMail($subject, $body, $filePath, $viaSpool);
   }
 
-  public function processSpoolInBackground() {
+  public function processSpoolInBackground() { var_dump(ROBOCOP_BIN_PATH . ' email:send -q');
     //TODO: use shell_exec to call /app/robocop email:send in the background
+    // NOPE this does not work :(
+    $this->process->setCommandLine(ROBOCOP_BIN_PATH . ' email:send -q');
+    $this->process->start();
   }
 }
