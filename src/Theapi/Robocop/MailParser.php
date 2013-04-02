@@ -53,8 +53,26 @@ class MailParser
     }
   }
 
+  /**
+   * Grab som incoming mail for using as test mails.
+   */
+  public function storeIncomingMail() {
+    $contents = stream_get_contents(STDIN);
+    error_log(print_r($contents, 1), 3, $this->saveDir . "/incoming_mail.txt");
+  }
+
   public function setMailer($mailer) {
     $this->mailer = $mailer;
+  }
+
+  /**
+   * Parses the filename to get the camera channel the image is from.
+   */
+  public function getChannelFromFilename($filename) {
+    if (preg_match('/(CH\d+)_/', $filename, $matches)) {
+      return $matches[1];
+    }
+    return 'CH00';
   }
 
   protected function processSnaps() {
@@ -84,6 +102,11 @@ class MailParser
       foreach($attachments as $attachment) {
         // get the attachment name
         $filename = $attachment->filename;
+
+        // Separate directory per channel
+        $channel = $this->getChannelFromFilename($filename);
+        $dir .= '/' . $channel;
+
         // write the file to the directory you want to save it in
         @mkdir($dir, 0755, true);
         if ($fp = fopen($dir . '/' . $filename, 'w')) {
