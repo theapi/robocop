@@ -49,7 +49,7 @@ class Images
     $this->output = $output;
   }
 
-  public function compareDir($date = null, $diffThreshold = null) {
+  public function compareDateDir($date = null, $diffThreshold = null) {
 
     if (empty($date)) {
       // Use the directory for today
@@ -64,6 +64,22 @@ class Images
       throw new \Exception($dir . ' is not a directory');
     }
     $destinationDir = $this->saveDir . '/p_' . $date;
+
+    // Compare the directories for each channel
+    $files = scandir($dir);
+    foreach ($files as $file) {
+      if (is_dir($dir . '/' . $file)) {
+        $this->compareDir($dir, $destinationDir, $diffThreshold);
+      }
+    }
+
+  }
+
+  public function compareDir($dir, $destinationDir, $diffThreshold = null) {
+
+    if (!is_dir($dir)) {
+      throw new \Exception($dir . ' is not a directory');
+    }
 
     if (empty($diffThreshold)) {
       $diffThreshold = $this->config['diff_threshold'];
@@ -173,6 +189,9 @@ class Images
       $files = scandir($dir);
       foreach ($files as $file) {
         if ($file != '.' && $file != '..') {
+          if (is_dir($dir . '/' . $file)) {
+            $this->deleteDirectory($dir . '/' . $file);
+          }
           unlink($dir . '/' . $file);
         }
       }

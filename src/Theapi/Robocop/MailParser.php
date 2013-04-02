@@ -57,6 +57,16 @@ class MailParser
     $this->mailer = $mailer;
   }
 
+  /**
+   * Parses the filename to get the camera channel the image is from.
+   */
+  public function getChannelFromFilename($filename) {
+    if (preg_match('/(CH\d+)_/', $filename, $matches)) {
+      return $matches[1];
+    }
+    return 'CH00';
+  }
+
   protected function processSnaps() {
     if (!$this->saveAttachments()) {
       // no attachments
@@ -84,6 +94,11 @@ class MailParser
       foreach($attachments as $attachment) {
         // get the attachment name
         $filename = $attachment->filename;
+
+        // Separate directory per channel
+        $channel = $this->getChannelFromFilename($filename);
+        $dir .= '/' . $channel;
+
         // write the file to the directory you want to save it in
         @mkdir($dir, 0755, true);
         if ($fp = fopen($dir . '/' . $filename, 'w')) {

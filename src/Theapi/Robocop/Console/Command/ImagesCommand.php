@@ -58,7 +58,7 @@ Compare images for the amount of difference in <info>dir</info>.
         $images->deleteOldDirectories($input->getOption('processed'));
       } else {
         $date = $input->getArgument('date');
-        $images->compareDir($date, $input->getOption('threshold'));
+        $images->compareDateDir($date, $input->getOption('threshold'));
       }
     }
 
