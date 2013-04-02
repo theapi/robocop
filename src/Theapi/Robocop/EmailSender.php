@@ -130,10 +130,9 @@ class EmailSender
     return $this->sendMail($subject, $body, $filePath, $viaSpool);
   }
 
-  public function processSpoolInBackground() { var_dump(ROBOCOP_BIN_PATH . ' email:send -q');
-    //TODO: use shell_exec to call /app/robocop email:send in the background
-    // NOPE this does not work :(
-    $this->process->setCommandLine(ROBOCOP_BIN_PATH . ' email:send -q');
-    $this->process->start();
+  public function processSpoolInBackground() {
+    //NB: the symfony Process does not seem to be able to execute the shell command in the background.
+    $cmd = ROBOCOP_BIN_PATH . ' email:send -q > /dev/null 2>/dev/null &';
+    shell_exec($cmd);
   }
 }
