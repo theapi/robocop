@@ -53,6 +53,14 @@ class MailParser
     }
   }
 
+  /**
+   * Grab som incoming mail for using as test mails.
+   */
+  public function storeIncomingMail() {
+    $contents = stream_get_contents(STDIN);
+    error_log(print_r($contents, 1), 3, $this->saveDir . "/incoming_mail.txt");
+  }
+
   public function setMailer($mailer) {
     $this->mailer = $mailer;
   }

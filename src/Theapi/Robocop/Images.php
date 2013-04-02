@@ -63,13 +63,15 @@ class Images
     if (!is_dir($dir)) {
       throw new \Exception($dir . ' is not a directory');
     }
-    $destinationDir = $this->saveDir . '/p_' . $date;
+    $processedDir = $this->saveDir . '/p_' . $date;
 
     // Compare the directories for each channel
     $files = scandir($dir);
     foreach ($files as $file) {
-      if (is_dir($dir . '/' . $file)) {
-        $this->compareDir($dir, $destinationDir, $diffThreshold);
+      if ($file != '.' && $file != '..' && is_dir($dir . '/' . $file)) {
+        $sourceDir = $dir . '/' . $file;
+        $destinationDir = $processedDir . '/' . $file;
+        $this->compareDir($sourceDir, $destinationDir, $diffThreshold);
       }
     }
 
@@ -94,9 +96,26 @@ class Images
       }
     }
 
+    if (empty($images)) {
+      return;
+    }
+
+    // create the destination dir
+    if (!file_exists($destinationDir)) {
+      if (!mkdir($destinationDir, 0777, true)) {
+        throw new \Exception('Unable to create Path [' . $destinationDir . ']');
+      }
+    }
+
     $i = 0;
     foreach ($images as $key => $image) {
-      if ($key > 0) {
+
+      // copy the first image
+      if ($key == 0) {
+        $img = trim(str_replace($dir, '', $images[$key]), '/');
+        $this->copyWithDatestamp($i, $dir, $destinationDir, $img);
+        $i++;
+      } else {
         $prev = $key - 1;
         $val = $this->compare($images[$prev], $images[$key]);
 
@@ -105,12 +124,7 @@ class Images
           $text = $img . ': <info>' . $val . '</info>';
           $this->writeln($text);
 
-          // copy image to a separate directory
-          if (!file_exists($destinationDir)) {
-            if (!mkdir($destinationDir, 0777, true)) {
-              throw new \Exception('Unable to create Path [' . $destinationDir . ']');
-            }
-          }
+          // copy image to the destination directory
           $this->copyWithDatestamp($i, $dir, $destinationDir, $img);
           $i++;
         } else {
@@ -191,8 +205,9 @@ class Images
         if ($file != '.' && $file != '..') {
           if (is_dir($dir . '/' . $file)) {
             $this->deleteDirectory($dir . '/' . $file);
+          } else {
+            unlink($dir . '/' . $file);
           }
-          unlink($dir . '/' . $file);
         }
       }
       // delete directory
